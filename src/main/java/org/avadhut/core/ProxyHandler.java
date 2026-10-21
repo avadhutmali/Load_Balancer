@@ -1,7 +1,8 @@
-package org.avadhut.loadbalancer;
+package org.avadhut.core;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.avadhut.strategy.LoadBalancingStrategy;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,12 +10,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 public class ProxyHandler implements HttpHandler {
 
     private final BackendPool pool;
     private final HttpClient client;
-
 
     public ProxyHandler(BackendPool pool){
         this.client = HttpClient.newHttpClient();
