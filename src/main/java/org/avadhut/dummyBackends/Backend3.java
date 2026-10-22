@@ -12,7 +12,7 @@ public class Backend3 {
         HttpServer server = HttpServer.create(new InetSocketAddress(8083),0);
 
         server.createContext("/",exchange->{
-            String responseString = "Response From server 8083";
+            String responseString = "Response From server 8083 \n";
             exchange.sendResponseHeaders(200,responseString.getBytes().length);
             OutputStream os = exchange.getResponseBody();
             os.write(responseString.getBytes());
@@ -20,7 +20,7 @@ public class Backend3 {
         });
         server.setExecutor(null);
         server.start();
-        System.out.println("Server is started on the port 8083");
+        System.out.println("\n Server is started on the port 8083 \n");
 
 
     }

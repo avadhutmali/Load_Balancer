@@ -5,6 +5,7 @@ import org.avadhut.core.Backend;
 import org.avadhut.core.BackendPool;
 import org.avadhut.core.ProxyHandler;
 import org.avadhut.core.WeightedBackend;
+import org.avadhut.strategy.LeastConnectionsStrategy;
 import org.avadhut.strategy.RoundRobinStrategy;
 import org.avadhut.strategy.WeightedRoundRobinStrategy;
 
@@ -24,8 +25,11 @@ public class LoadBalancerServer {
         WeightedBackend weightedBackend2 = new WeightedBackend(backend2,1);
         WeightedBackend weightedBackend3 = new WeightedBackend(backend3,1);
 
-        List<WeightedBackend> weightedBackendList = List.of(weightedBackend1,weightedBackend2,weightedBackend3);
-        BackendPool pool = new BackendPool(new WeightedRoundRobinStrategy(weightedBackendList));
+        List<Backend> backendList = List.of(backend1,backend2,backend3);
+        BackendPool pool = new BackendPool(new LeastConnectionsStrategy(backendList));
+
+//        List<WeightedBackend> weightedBackendList = List.of(weightedBackend1,weightedBackend2,weightedBackend3);
+//        BackendPool pool = new BackendPool(new WeightedRoundRobinStrategy(weightedBackendList));
 
 //        List<Backend> backendList = List.of(backend1,backend2,backend3);
 //        BackendPool pool = new BackendPool(new RoundRobinStrategy(backendList));

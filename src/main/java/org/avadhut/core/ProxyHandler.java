@@ -54,6 +54,8 @@ public class ProxyHandler implements HttpHandler {
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }finally {
+            pool.release(backend);
         }
     }
 }
