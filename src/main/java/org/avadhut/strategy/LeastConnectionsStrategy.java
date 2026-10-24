@@ -5,6 +5,7 @@ import org.avadhut.core.Backend;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,17 +33,19 @@ public class LeastConnectionsStrategy implements LoadBalancingStrategy, Connecti
     }
 
     @Override
-    public synchronized Backend next() {
+    public synchronized Backend next(Set<Backend> healthBackendsSet) {
         Backend nextBackend = null;
         int min = Integer.MAX_VALUE;
 
         for(Backend backend : connectionTrackingMap.keySet()){
+            if(!healthBackendsSet.contains(backend))continue;
             int val = connectionTrackingMap.get(backend).get();
             if(val < min){
                 min = val;
                 nextBackend = backend;
             }
         }
+        if(nextBackend==null)return null;
         incrementConnections(nextBackend);
         System.out.println("Selecting: " + nextBackend.port() + " | state: " + connectionTrackingMap);
         return  nextBackend;

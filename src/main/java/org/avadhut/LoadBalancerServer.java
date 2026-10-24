@@ -1,10 +1,7 @@
 package org.avadhut;
 
 import com.sun.net.httpserver.HttpServer;
-import org.avadhut.core.Backend;
-import org.avadhut.core.BackendPool;
-import org.avadhut.core.ProxyHandler;
-import org.avadhut.core.WeightedBackend;
+import org.avadhut.core.*;
 import org.avadhut.strategy.LeastConnectionsStrategy;
 import org.avadhut.strategy.RoundRobinStrategy;
 import org.avadhut.strategy.WeightedRoundRobinStrategy;
@@ -25,14 +22,14 @@ public class LoadBalancerServer {
         WeightedBackend weightedBackend2 = new WeightedBackend(backend2,1);
         WeightedBackend weightedBackend3 = new WeightedBackend(backend3,1);
 
-        List<Backend> backendList = List.of(backend1,backend2,backend3);
-        BackendPool pool = new BackendPool(new LeastConnectionsStrategy(backendList));
+//        List<Backend> backendList = List.of(backend1,backend2,backend3);
+//        BackendPool pool = new BackendPool(new LeastConnectionsStrategy(backendList), new HealthChecker(backendList));
 
 //        List<WeightedBackend> weightedBackendList = List.of(weightedBackend1,weightedBackend2,weightedBackend3);
-//        BackendPool pool = new BackendPool(new WeightedRoundRobinStrategy(weightedBackendList));
+//        BackendPool pool = new BackendPool(new WeightedRoundRobinStrategy(weightedBackendList), new HealthChecker(backendList));
 
-//        List<Backend> backendList = List.of(backend1,backend2,backend3);
-//        BackendPool pool = new BackendPool(new RoundRobinStrategy(backendList));
+        List<Backend> backendList = List.of(backend1,backend2,backend3);
+        BackendPool pool = new BackendPool(new RoundRobinStrategy(backendList),new HealthChecker(backendList));
 
         ProxyHandler handler = new ProxyHandler(pool);
         HttpServer server = HttpServer.create(new InetSocketAddress(9090),0);

@@ -10,11 +10,11 @@ public class Backend2 {
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8082),0);
-        try {
-            Thread.sleep(1000); // simulate slow backend
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+//        try {
+//            Thread.sleep(1000); // simulate slow backend
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
         server.createContext("/",exchange->{
             String responseString = "Response From server 8082 \n";
             exchange.sendResponseHeaders(200,responseString.getBytes().length);

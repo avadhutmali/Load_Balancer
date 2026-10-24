@@ -6,6 +6,7 @@ import org.avadhut.core.WeightedBackend;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class WeightedRoundRobinStrategy implements LoadBalancingStrategy{
     private final List<WeightedBackend> weightedBackends;
@@ -27,11 +28,12 @@ public class WeightedRoundRobinStrategy implements LoadBalancingStrategy{
     }
 
     @Override
-    public synchronized Backend next() {
+    public synchronized Backend next(Set<Backend> healthyBackendSet) {
         Backend nextBackend = null;
         int maxWeight =Integer.MIN_VALUE;
 
         for(WeightedBackend weightedBackend: weightedBackends){
+            if(!healthyBackendSet.contains(weightedBackend.getBackend()))continue;
             int currentWeight = currentWeightMap.get(weightedBackend.getBackend());
             int effectiveWeight = effectiveWeightMap.get(weightedBackend.getBackend());
 
@@ -42,6 +44,7 @@ public class WeightedRoundRobinStrategy implements LoadBalancingStrategy{
             }
             currentWeightMap.put(weightedBackend.getBackend(),currentWeight);
         }
+        if(nextBackend==null)return null;
         currentWeightMap.put(nextBackend,currentWeightMap.get(nextBackend) - totalWeight);
 
         return nextBackend;
